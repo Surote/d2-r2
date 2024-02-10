@@ -1,0 +1,19 @@
+apiVersion: "logging.openshift.io/v1"
+kind: ClusterLogForwarder
+metadata:
+  name: instance
+  namespace: openshift-logging
+spec:
+  outputs:
+   - name: syslog-insecure
+     type: syslog
+     url: 'udp://192.168.176.10:514'
+  pipelines:
+   - name: infrastructure-audit-logs
+     inputRefs:
+     - infrastructure
+     - audit
+     - application
+     outputRefs:
+     - syslog-insecure
+     - default
