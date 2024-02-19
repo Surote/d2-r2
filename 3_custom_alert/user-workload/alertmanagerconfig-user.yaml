@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1beta1
+kind: AlertmanagerConfig
+metadata:
+  name: user-alertmanagerconfig
+  namespace: test-application
+spec:
+  receivers:
+  - name: default
+    slackConfigs:
+    - apiURL:
+        key: url
+        name: my-slack-secret
+      channel: ais-demo-alert-user
+      text: >-
+          {{ range .Alerts -}}
+          *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+
+          *Description:* {{ .Annotations.description }}
+
+          *Details:*
+            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+            {{ end }}
+          {{ end }}
+  route:
+    groupBy:
+    - namespace
+    receiver: default
