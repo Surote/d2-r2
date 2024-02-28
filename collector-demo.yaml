@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo-resource-quota
+  name: test-fluent-583
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-resource-quota
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo-resource-quota
+    spec:
+      containers:
+      - image: registry.redhat.io/openshift-logging/fluentd-rhel9@sha256:7eb2ab739c4a7378a1abff9444b5a7cb199acdda6d5def7544295f8c45a6d22d
+        name: py-call-quota
+        command:
+            - sleep
+            - "3600"
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
