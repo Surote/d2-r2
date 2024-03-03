@@ -1,0 +1,26 @@
+apiVersion: fileintegrity.openshift.io/v1alpha1
+kind: FileIntegrity
+metadata:
+  name: worker-fileintegrity
+  namespace: openshift-file-integrity
+spec:
+  config:
+    gracePeriod: 20
+    initialDelay: 60
+    key: config
+    maxBackups: 5
+    name: default-aide-config
+    namespace: openshift-file-integrity
+  debug: false
+  nodeSelector:
+    node-role.kubernetes.io/worker: ''
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/infra
+      operator: Exists
+    - key: node-role.kubernetes.io/infra
+      operator: Exists
+
