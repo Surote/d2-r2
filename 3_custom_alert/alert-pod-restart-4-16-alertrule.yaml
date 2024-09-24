@@ -1,0 +1,16 @@
+apiVersion: monitoring.openshift.io/v1
+kind: AlertingRule
+metadata:
+  name: demo-alert-core
+  namespace: openshift-monitoring
+spec:
+  groups:
+  - name: custom-core-rules
+    rules:
+    - alert: swongpai-core-alert-pod-restart
+      for: 1m
+      expr: sum(increase(kube_pod_container_status_restarts_total[2m])) by (namespace) > 0
+      labels:
+        severity: warning
+      annotations:
+        message: Pod restart
